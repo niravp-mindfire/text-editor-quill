@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css"; // Quill styles
 import UserIcon from "./user.png";
-
+import "./App.css"
 // Add undo/redo icons using Quill icons
 const UndoIcon = () => <i className="fa fa-undo" />;
 const RedoIcon = () => <i className="fa fa-redo" />;
