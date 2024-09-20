@@ -13,6 +13,7 @@ const App = () => {
   const [selectionRange, setSelectionRange] = useState(null); // Store text selection range
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 }); // State to position toolbar
   const quillRef = useRef(null); // Ref to access Quill instance
+  const editorContainerRef = useRef(null); // Ref for the editor container (to get positioning)
   const [rate, setRate] = useState(50); // State to manage the rate slider
 
   // Quill modules configuration
@@ -52,12 +53,12 @@ const App = () => {
     const editor = quillRef.current.getEditor();
 
     // Make sure quillRef and its container are available
-    if (editor && quillRef.current && quillRef.current.container) {
+    if (editor) {
       const bounds = editor.getBounds(range.index, range.length); // Get bounds of the selection
-      const editorContainer = quillRef.current.container.getBoundingClientRect(); // Get editor's position on the screen
+      const editorContainer = editorContainerRef.current.getBoundingClientRect(); // Get editor's position on the screen
 
       setToolbarPosition({
-        top: editorContainer.top + bounds.bottom + window.scrollY, // Position toolbar below the selected text
+        top: editorContainer.top + bounds.bottom + window.scrollY + 10, // Position toolbar below the selected text
         left: editorContainer.left + bounds.left + window.scrollX,
       });
     }
@@ -111,21 +112,23 @@ const App = () => {
       </div>
 
       {/* Text Editor */}
-      <ReactQuill
-        ref={quillRef}
-        theme="snow"
-        value={text}
-        onChange={setText}
-        modules={modules}
-        style={{
-          backgroundColor: "#333",
-          color: "#fff",
-          borderRadius: "5px",
-          padding: "10px",
-          minHeight: "100px",
-        }}
-        onChangeSelection={handleSelectionChange}
-      />
+      <div ref={editorContainerRef} style={{ position: "relative" }}>
+        <ReactQuill
+          ref={quillRef}
+          theme="snow"
+          value={text}
+          onChange={setText}
+          modules={modules}
+          style={{
+            backgroundColor: "#333",
+            color: "#fff",
+            borderRadius: "5px",
+            padding: "10px",
+            minHeight: "100px",
+          }}
+          onChangeSelection={handleSelectionChange}
+        />
+      </div>
 
       {/* Undo and Redo Buttons */}
       <div style={{ display: "flex", gap: "10px", marginTop: "10px" }}>
